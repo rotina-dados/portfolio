@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rotina · Dados & Processos</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:    #F06920;
+  --orange-lo: rgba(240,105,32,0.11);
+  --orange-bd: rgba(240,105,32,0.22);
+  --dark:      #0C0E13;
+  --mid:       #14181F;
+  --card:      #1A1F29;
+  --border:    rgba(255,255,255,0.07);
+  --text:      #FDFCFA;
+  --muted:     rgba(253,252,250,0.44);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--text);font-family:'Space Grotesk',sans-serif;overflow-x:hidden;cursor:none}
+.cursor{width:8px;height:8px;background:var(--orange);border-radius:50%;position:fixed;pointer-events:none;z-index:9999}
+.cursor-ring{width:32px;height:32px;border:1.5px solid rgba(240,105,32,.4);border-radius:50%;position:fixed;pointer-events:none;z-index:9998}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:20px 52px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(12,14,19,.97),transparent)}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-logo-text{font-size:17px;font-weight:600;letter-spacing:-.025em;color:var(--text)}
+.nav-tagline{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.nav-cta{display:flex;align-items:center;gap:8px;background:var(--orange);color:var(--text);text-decoration:none;font-size:13px;font-weight:600;padding:10px 22px;border-radius:100px;transition:all .2s}
+.nav-cta:hover{opacity:.88;transform:scale(1.02)}
+.hero{min-height:100vh;display:flex;align-items:center;padding:130px 52px 90px;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:-180px;right:-180px;width:640px;height:640px;background:radial-gradient(circle,rgba(240,105,32,.1) 0%,transparent 65%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:56px 56px;mask-image:radial-gradient(ellipse 75% 75% at 50% 50%,black 20%,transparent 100%)}
+.hero-content{position:relative;z-index:2;max-width:800px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--orange-lo);border:1px solid var(--orange-bd);color:var(--orange);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;padding:7px 14px;border-radius:100px;margin-bottom:40px;animation:up .6s ease both}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--orange);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+h1{font-size:clamp(44px,5.5vw,74px);font-weight:700;letter-spacing:-.04em;line-height:1.05;color:var(--text);animation:up .65s ease .1s both}
+h1 span{color:var(--orange)}
+.hero-sub{margin-top:28px;font-size:17px;color:var(--muted);line-height:1.65;max-width:500px;font-weight:400;animation:up .65s ease .2s both}
+.hero-actions{margin-top:44px;display:flex;gap:14px;flex-wrap:wrap;animation:up .65s ease .3s both}
+.btn-orange{display:inline-flex;align-items:center;gap:8px;background:var(--orange);color:var(--text);text-decoration:none;font-size:14px;font-weight:600;padding:13px 26px;border-radius:100px;transition:all .2s}
+.btn-orange:hover{opacity:.88;transform:translateY(-2px)}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--text);text-decoration:none;font-size:14px;font-weight:500;padding:13px 26px;border-radius:100px;border:1px solid var(--border);transition:all .2s}
+.btn-ghost:hover{border-color:rgba(255,255,255,.18);transform:translateY(-2px)}
+.hero-stats{margin-top:72px;padding-top:44px;border-top:1px solid var(--border);display:flex;gap:52px;flex-wrap:wrap;animation:up .65s ease .4s both}
+.stat-n{font-size:34px;font-weight:700;letter-spacing:-.05em;color:var(--text)}
+.stat-n span{color:var(--orange)}
+.stat-l{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.divider{border:none;border-top:1px solid var(--border);margin:0}
+.section{padding:96px 52px;max-width:1200px;margin:0 auto}
+.s-tag{display:flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--orange);margin-bottom:18px}
+.s-tag::before{content:'';display:block;width:20px;height:1px;background:var(--orange)}
+.s-title{font-size:clamp(28px,3.8vw,48px);font-weight:700;letter-spacing:-.04em;color:var(--text);line-height:1.1;margin-bottom:14px}
+.s-title span{color:var(--orange)}
+.s-sub{font-size:15px;color:var(--muted);max-width:460px;line-height:1.7;font-weight:400}
+.srv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:18px;overflow:hidden;margin-top:56px}
+.srv-card{background:var(--mid);padding:36px 32px;transition:background .25s;position:relative;overflow:hidden}
+.srv-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s}
+.srv-card:hover{background:var(--card)}
+.srv-card:hover::after{transform:scaleX(1)}
+.srv-icon{width:40px;height:40px;background:var(--orange-lo);border:1px solid var(--orange-bd);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:22px}
+.srv-name{font-size:16px;font-weight:600;color:var(--text);margin-bottom:10px;letter-spacing:-.02em}
+.srv-desc{font-size:13px;color:var(--muted);line-height:1.65;font-weight:400}
+.cases-hd{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:52px;flex-wrap:wrap;gap:24px}
+.case-card{background:var(--mid);border:1px solid var(--border);border-radius:18px;overflow:hidden;margin-bottom:20px;transition:border-color .3s,transform .3s}
+.case-card:hover{border-color:var(--orange-bd);transform:translateY(-3px)}
+.case-preview{height:268px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.prev-sistema{background:linear-gradient(135deg,#110800 0%,#0C0E13 100%)}
+.mock-screen{width:82%;background:#111418;border-radius:10px;border:1px solid var(--border);box-shadow:0 24px 64px rgba(0,0,0,.55);overflow:hidden}
+.mock-top{background:linear-gradient(90deg,var(--orange),#F09020);height:40px;display:flex;align-items:center;padding:0 18px;gap:10px;font-size:12px;font-weight:600;color:#fff}
+.mock-body{padding:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mock-kpi{background:var(--dark);border-radius:8px;padding:12px;font-size:9px;color:var(--muted)}
+.mock-kpi strong{display:block;font-size:17px;font-weight:700;color:var(--text);letter-spacing:-.04em;margin-bottom:2px}
+.prev-auto{background:linear-gradient(135deg,#080810 0%,#0C0E13 100%)}
+.pdf-stack{position:relative;width:130px;height:168px}
+.pdf-item{position:absolute;width:130px;height:168px;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:7px}
+.pdf-item:nth-child(1){transform:rotate(-6deg) translate(-18px,10px);opacity:.35}
+.pdf-item:nth-child(2){transform:rotate(-2deg) translate(-7px,4px);opacity:.65}
+.pdf-item:nth-child(3){transform:rotate(1deg);z-index:3;background:#1c2028}
+.pdf-hl{background:var(--orange);height:5px;border-radius:3px;width:55%}
+.pdf-bl{height:3px;border-radius:2px;background:rgba(255,255,255,.08)}
+.pdf-bl.w80{width:80%}.pdf-bl.w60{width:60%}.pdf-bl.w70{width:70%}.pdf-bl.w50{width:50%}
+.auto-badge{position:absolute;bottom:20px;right:20px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--orange);background:var(--orange-lo);border:1px solid var(--orange-bd);padding:5px 12px;border-radius:100px}
+.prev-dash{background:linear-gradient(135deg,#080f0a 0%,#0C0E13 100%)}
+.dash-mock{width:82%;background:#111418;border-radius:10px;border:1px solid var(--border);padding:18px;box-shadow:0 24px 64px rgba(0,0,0,.55)}
+.dash-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;color:var(--muted);margin-bottom:14px;text-transform:uppercase}
+.dash-bars{display:flex;align-items:flex-end;gap:5px;height:72px}
+.dbar{flex:1;border-radius:3px 3px 0 0;background:linear-gradient(to top,rgba(240,105,32,.85),rgba(240,105,32,.2))}
+.dash-mets{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:14px}
+.dash-met{background:var(--dark);border-radius:6px;padding:8px;font-size:9px;color:var(--muted)}
+.dash-met strong{display:block;font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.04em}
+.case-body{padding:32px 36px;display:flex;gap:28px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+.case-info{flex:1;min-width:240px}
+.case-tag{display:inline-block;font-family:'DM Mono',monospace;font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);background:var(--orange-lo);border:1px solid var(--orange-bd);padding:4px 10px;border-radius:100px;margin-bottom:14px}
+.case-title{font-size:20px;font-weight:600;letter-spacing:-.03em;color:var(--text);margin-bottom:10px;line-height:1.25}
+.case-desc{font-size:13px;color:var(--muted);line-height:1.7;max-width:480px;font-weight:400}
+.case-result{background:var(--orange-lo);border:1px solid var(--orange-bd);border-radius:14px;padding:20px 22px;min-width:190px}
+.res-lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+.res-val{font-size:26px;font-weight:700;color:var(--text);letter-spacing:-.05em;line-height:1;margin-bottom:5px}
+.res-desc{font-size:11px;color:var(--muted);line-height:1.5;font-weight:400}
+.about-wrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.about-card{background:var(--mid);border:1px solid var(--border);border-radius:18px;padding:36px}
+.avatar{width:56px;height:56px;background:linear-gradient(135deg,var(--orange),#F09040);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:#fff;margin-bottom:18px}
+.about-name{font-size:18px;font-weight:600;letter-spacing:-.025em;color:var(--text);margin-bottom:3px}
+.about-role{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--muted);margin-bottom:24px;text-transform:uppercase}
+.pills{display:flex;flex-wrap:wrap;gap:7px}
+.pill{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--text);background:var(--card);border:1px solid var(--border);padding:5px 11px;border-radius:100px}
+.about-txt{font-size:15px;color:var(--muted);line-height:1.75;font-weight:400}
+.about-txt strong{color:var(--text);font-weight:600}
+.about-txt p+p{margin-top:18px}
+.cta-wrap{padding:96px 52px}
+.cta-inner{max-width:1200px;margin:0 auto;background:linear-gradient(135deg,rgba(240,105,32,.1),rgba(240,105,32,.03));border:1px solid var(--orange-bd);border-radius:24px;padding:80px 64px;text-align:center;position:relative;overflow:hidden}
+.cta-inner::before{content:'';position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:360px;height:360px;background:radial-gradient(circle,rgba(240,105,32,.13) 0%,transparent 65%);pointer-events:none}
+.cta-title{font-size:clamp(26px,3.5vw,46px);font-weight:700;letter-spacing:-.04em;color:var(--text);line-height:1.1;margin-bottom:18px}
+.cta-title span{color:var(--orange)}
+.cta-sub{font-size:15px;color:var(--muted);line-height:1.65;margin-bottom:36px;max-width:400px;margin-left:auto;margin-right:auto;font-weight:400}
+.btn-wa{display:inline-flex;align-items:center;gap:10px;background:#25d366;color:#fff;text-decoration:none;font-size:15px;font-weight:700;padding:15px 30px;border-radius:100px;transition:all .2s}
+.btn-wa:hover{background:#20c05a;transform:translateY(-3px);box-shadow:0 16px 40px rgba(37,211,102,.28)}
+footer{border-top:1px solid var(--border);padding:28px 52px;display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;flex-wrap:wrap;gap:14px}
+.foot-copy{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:.06em}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(max-width:768px){
+  nav,.section,.hero,.cta-wrap{padding-left:22px;padding-right:22px}
+  .about-wrap{grid-template-columns:1fr;gap:36px}
+  .case-body{flex-direction:column}
+  .cta-inner{padding:44px 24px}
+  footer{padding:24px 22px}
+  body{cursor:auto}
+  .cursor,.cursor-ring{display:none}
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<nav>
+  <a class="nav-logo" href="#">
+    <svg width="30" height="30" viewBox="0 0 100 100" fill="none">
+      <rect x="8" y="8" width="72" height="19" rx="7" fill="#F06920"/>
+      <rect x="8" y="40.5" width="46.1" height="19" rx="7" fill="#F06920" fill-opacity="0.55"/>
+      <rect x="8" y="73" width="25.9" height="19" rx="7" fill="#F06920" fill-opacity="0.28"/>
+      <path d="M86 13.26L95 17.5L86 21.74" stroke="#F06920" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div>
+      <div class="nav-logo-text">Rotina</div>
+      <div class="nav-tagline">Dados &amp; Processos</div>
+    </div>
+  </a>
+  <a href="https://wa.me/5585984578474" class="nav-cta" target="_blank">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.121.554 4.11 1.522 5.836L.057 23.854a.5.5 0 00.608.608l6.018-1.465A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.497-5.207-1.367l-.374-.216-3.876.943.943-3.876-.216-.374A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+    Falar no WhatsApp
+  </a>
+</nav>
+
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Fortaleza · CE · Disponível para projetos</div>
+    <h1>Transformo dados e processos em <span>sistemas que funcionam.</span></h1>
+    <p class="hero-sub">Automação de relatórios, sistemas web e dashboards para pequenos negócios e organizações. Entrego resultado real, não promessa.</p>
+    <div class="hero-actions">
+      <a href="#cases" class="btn-orange">Ver projetos entregues</a>
+      <a href="https://wa.me/5585984578474" class="btn-ghost" target="_blank">Conversar sobre seu projeto</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="stat-n"><span>184</span></div><div class="stat-l">Relatórios automatizados</div></div>
+      <div><div class="stat-n"><span>3</span></div><div class="stat-l">Sistemas em produção</div></div>
+      <div><div class="stat-n"><span>100<span style="font-size:18px">%</span></span></div><div class="stat-l">Projetos entregues</div></div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+  <div class="s-tag">O que faço</div>
+  <h2 class="s-title">Soluções práticas para <span>quem precisa de resultado</span></h2>
+  <p class="s-sub">Não vendo tecnologia. Resolvo problemas reais de negócios com automação e dados.</p>
+  <div class="srv-grid reveal">
+    <div class="srv-card"><div class="srv-icon">⚙️</div><div class="srv-name">Automação de Relatórios</div><div class="srv-desc">Elimino horas de trabalho manual transformando dados em relatórios automáticos em PDF ou HTML, prontos para apresentar.</div></div>
+    <div class="srv-card"><div class="srv-icon">🖥️</div><div class="srv-name">Sistemas para Negócios</div><div class="srv-desc">Sistemas web com login, cadastros, dashboards e controles — feitos sob medida para o seu processo, publicados online.</div></div>
+    <div class="srv-card"><div class="srv-icon">📊</div><div class="srv-name">Análise de Dados</div><div class="srv-desc">Transformo planilhas e bases de dados em análises visuais claras, com gráficos e indicadores que ajudam na decisão.</div></div>
+    <div class="srv-card"><div class="srv-icon">📈</div><div class="srv-name">Dashboards e Painéis</div><div class="srv-desc">Painéis interativos para acompanhar resultados, metas e indicadores em tempo real, com filtros e exportação.</div></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="section" id="cases">
+  <div class="cases-hd">
+    <div>
+      <div class="s-tag">Projetos entregues</div>
+      <h2 class="s-title">Não é portfólio fictício.<br><span>São entregas reais.</span></h2>
+    </div>
+    <p class="s-sub">Cada projeto foi desenvolvido, publicado e está sendo usado por organizações reais.</p>
+  </div>
+
+  <div class="case-card reveal">
+    <div class="case-preview prev-sistema">
+      <div class="mock-screen">
+        <div class="mock-top">🎯 Avaliação de Desempenho · Dashboard</div>
+        <div class="mock-body">
+          <div class="mock-kpi"><strong>27</strong>Usuários ativos</div>
+          <div class="mock-kpi"><strong>96%</strong>Autoavaliação</div>
+          <div class="mock-kpi"><strong>100%</strong>Av. Colaboradores</div>
+          <div class="mock-kpi"><strong>73%</strong>Av. Líderes</div>
+        </div>
+      </div>
+    </div>
+    <div class="case-body">
+      <div class="case-info">
+        <div class="case-tag">Sistema Web Completo</div>
+        <div class="case-title">Sistema de Avaliação de Desempenho 180°</div>
+        <p class="case-desc">Plataforma completa com autenticação, autoavaliação, avaliação entre pares e líderes, PDI individual, feedbacks qualitativos, acompanhamento de tarefas e dashboards analíticos. Desenvolvido do zero e publicado em produção.</p>
+      </div>
+      <div class="case-result">
+        <div class="res-lbl">Resultado</div>
+        <div class="res-val">27</div>
+        <div class="res-desc">colaboradores avaliados com processo 100% digital e automatizado</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card reveal">
+    <div class="case-preview prev-auto">
+      <div class="pdf-stack">
+        <div class="pdf-item"><div class="pdf-hl"></div><div class="pdf-bl w80"></div><div class="pdf-bl w60"></div><div class="pdf-bl w70"></div></div>
+        <div class="pdf-item"><div class="pdf-hl"></div><div class="pdf-bl w80"></div><div class="pdf-bl w60"></div><div class="pdf-bl w70"></div></div>
+        <div class="pdf-item"><div class="pdf-hl"></div><div class="pdf-bl w80"></div><div class="pdf-bl w60"></div><div class="pdf-bl w70"></div><div class="pdf-bl w50"></div></div>
+      </div>
+      <div class="auto-badge">184 relatórios · 184 municípios</div>
+    </div>
+    <div class="case-body">
+      <div class="case-info">
+        <div class="case-tag">Automação de Dados</div>
+        <div class="case-title">Relatórios Municipais Automatizados</div>
+        <p class="case-desc">Pipeline de automação que gerou 184 relatórios educacionais personalizados — um para cada município — com gráficos, dados do IDEB, Fundeb e análises comparativas. O que levaria semanas foi gerado automaticamente.</p>
+      </div>
+      <div class="case-result">
+        <div class="res-lbl">Escala</div>
+        <div class="res-val">184×</div>
+        <div class="res-desc">relatórios únicos gerados automaticamente com dados reais</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="case-card reveal">
+    <div class="case-preview prev-dash">
+      <div class="dash-mock">
+        <div class="dash-lbl">Pesquisa educacional · 799 respondentes · 9 categorias</div>
+        <div class="dash-bars">
+          <div class="dbar" style="height:92%"></div><div class="dbar" style="height:8%"></div>
+          <div class="dbar" style="height:87%"></div><div class="dbar" style="height:13%"></div>
+          <div class="dbar" style="height:75%"></div><div class="dbar" style="height:60%"></div>
+          <div class="dbar" style="height:82%"></div><div class="dbar" style="height:45%"></div>
+          <div class="dbar" style="height:70%"></div><div class="dbar" style="height:88%"></div>
+          <div class="dbar" style="height:55%"></div><div class="dbar" style="height:30%"></div>
+        </div>
+        <div class="dash-mets">
+          <div class="dash-met"><strong>799</strong>Respondentes</div>
+          <div class="dash-met"><strong>61</strong>Blocos de análise</div>
+          <div class="dash-met"><strong>9</strong>Categorias</div>
+        </div>
+      </div>
+    </div>
+    <div class="case-body">
+      <div class="case-info">
+        <div class="case-tag">Dashboard Analítico</div>
+        <div class="case-title">Dashboard de Análise de Pesquisa com Líderes Escolares</div>
+        <p class="case-desc">Painel interativo para análise de pesquisa com 799 líderes escolares, 61 blocos de análise em 9 categorias, filtros dinâmicos por perfil, região, gênero, raça e tipo de escola, com insights automáticos por questão. Publicado e acessível online.</p>
+      </div>
+      <div class="case-result">
+        <div class="res-lbl">Escala</div>
+        <div class="res-val">799</div>
+        <div class="res-desc">respostas analisadas com filtros dinâmicos em tempo real</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+  <div class="about-wrap">
+    <div class="reveal">
+      <div class="about-card">
+        <div class="avatar">R</div>
+        <div class="about-name">Rotina</div>
+        <div class="about-role">Dados & Processos · Fortaleza, CE</div>
+        <div class="pills">
+          <span class="pill">Python</span><span class="pill">HTML/CSS</span>
+          <span class="pill">Automação</span><span class="pill">Dashboards</span>
+          <span class="pill">Análise de Dados</span><span class="pill">Sistemas Web</span>
+        </div>
+      </div>
+    </div>
+    <div class="reveal">
+      <div class="s-tag">Sobre</div>
+      <h2 class="s-title">Tecnologia que <span>resolve de verdade</span></h2>
+      <div class="about-txt">
+        <p>A Rotina é uma empresa de automação, sistemas e análise de dados focada em <strong>resolver problemas reais de pequenos negócios e organizações.</strong> Sem jargão técnico, sem promessa vazia.</p>
+        <p>Nossa missão é simples: <strong>o que hoje é manual, repetitivo e lento passa a funcionar sozinho.</strong> Cada entrega é pensada para gerar resultado imediato para o cliente.</p>
+        <p>Atendemos clínicas, escritórios, escolas e pequenos negócios em Fortaleza e em todo o Brasil, de forma remota e com total transparência no processo.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="cta-wrap">
+  <div class="cta-inner reveal">
+    <h2 class="cta-title">Tem um processo manual que poderia <span>funcionar sozinho?</span></h2>
+    <p class="cta-sub">Me conta o problema. Se eu conseguir resolver, te mando uma proposta sem compromisso.</p>
+    <a href="https://wa.me/5585984578474?text=Ol%C3%A1%20Elvis%2C%20vi%20o%20portf%C3%B3lio%20da%20Rotina%20e%20gostaria%20de%20conversar%20sobre%20um%20projeto." class="btn-wa" target="_blank">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.121.554 4.11 1.522 5.836L.057 23.854a.5.5 0 00.608.608l6.018-1.465A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.891 0-3.667-.497-5.207-1.367l-.374-.216-3.876.943.943-3.876-.216-.374A9.956 9.956 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+      Falar no WhatsApp agora
+    </a>
+  </div>
+</div>
+
+<footer>
+  <div style="display:flex;align-items:center;gap:10px">
+    <svg width="22" height="22" viewBox="0 0 100 100" fill="none">
+      <rect x="8" y="8" width="72" height="19" rx="7" fill="#F06920"/>
+      <rect x="8" y="40.5" width="46.1" height="19" rx="7" fill="#F06920" fill-opacity="0.55"/>
+      <rect x="8" y="73" width="25.9" height="19" rx="7" fill="#F06920" fill-opacity="0.28"/>
+      <path d="M86 13.26L95 17.5L86 21.74" stroke="#F06920" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span style="font-size:14px;font-weight:600;letter-spacing:-.02em">Rotina</span>
+  </div>
+  <div class="foot-copy">FORTALEZA · CE · (85) 98457-8474</div>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx-4+'px';cur.style.top=my-4+'px'});
+(function loop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx-16+'px';ring.style.top=ry-16+'px';requestAnimationFrame(loop)})();
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
